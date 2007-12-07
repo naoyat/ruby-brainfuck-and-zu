@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+$LOAD_PATH << File.join(File.dirname(__FILE__), "lib/")
+require "brainfuck"
+
+bf = Brainfuck.VM
+
+if ARGV.size >= 1
+  if ARGV[0][0] == 0x2D  # '-'
+    options = ARGV[0][1 .. -1]
+    ARGV.shift
+  end
+
+  bfcode = bf.load(ARGF.read)
+
+  if options =~ /l/  # bfi -l <source> とすると実行せずにリストをダンプする
+    bf.list
+  else
+    bf.run
+  end
+else
+  print "bfi <source>\n"
+end

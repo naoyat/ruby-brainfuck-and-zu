@@ -1,0 +1,54 @@
+ ==========================================
+  Brainf*ckコードを生成するための私的ライブラリ
+  ◎動作テスト用Brainf*ck VM付属
+ ==========================================
+
+! これは何
+
+  naoya_tの私的ライブラリ
+  Brainf*ckで動くプログラムを書きたい時に役に立つかもしれない
+
+! できること
+
+  現時点では、「ず」（後述）をコンパイルしたコードを動かすのに必要な程度のこと
+  将来的にはSchemeを走らせるのが夢
+
+! 応用例
+
+  bfi : Brainf*ck VM。というかインタプリタ。
+
+    動作テスト用。
+    値は8ビットで wrap around します。
+
+  zu2bf : ２次元プログラミング言語「ず」のコンパイラ
+
+    「ず」については作者のyharaさんの
+      http://mono.kmc.gr.jp/~yhara/w/?ZuLanguage
+    を参照のこと。textgraphライブラリ（zu-0.1.0.tar.gzに含まれる）が必要。
+
+    生成したコードは、８ビットでwrap aroundしない処理系では動きません。
+
+    % ./zu2bf foo.zu > foo.bf
+
+      「ず」で書かれたプログラム foo.zu をBrainf*ckオブジェクトコードにコンパイル
+
+    % ./zu2bf -r foo.zu 
+
+      「ず」で書かれたプログラム foo.zu をBrainf*ckにコンパイルし、VM上で実行
+
+! ライセンスについて
+
+  Rubyと一緒
+
+! 開発履歴
+
+  * ver 0.1.1 : 2007-12-06夜
+  * ver 0.1.0 : 2007-12-06朝
+  ** 初公開
+
+! 作者
+
+  * naoya_t (Naoya Tozuka) - naoya.tozuka/at/gmail.com
+  * http://blog.livedoor.jp/naoya_t/
+  * (hate)naoyaとは別人。ファーストネーム以外の共通点はとPasopia 7ユーザだった事
+  * id:jknaoyaとも別人。

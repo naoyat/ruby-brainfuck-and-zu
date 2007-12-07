@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+#
+# zu2bf - Zu compiler
+#
+$LOAD_PATH << File.join(File.dirname(__FILE__), "lib/")
+require 'textgraph'
+require 'brainfuck'
+
+class Zu2Bf
+  def initialize
+  end
+
+  def compile(src)
+    tg = TextGraph.parse(src)
+    wr = Brainfuck.writer
+
+    table = Array.new
+
+    tg.cells.each_with_index {|cell,i|
+      nexts = tg.links.find_all{|from, to| from == i}
+      inst = cell.content.strip
+      nexts.size.times {|t| inst += ", #{1+nexts[t][1]}"}
+      table[1+i] = inst
+    }
+    wr.node_switch(table).optimize
+  end
+end
+
+if ARGV.size==0
+  puts "usage: zu2bf <scriptfile>"
+else
+  if ARGV[0][0] == 0x2D
+    options = ARGV[0][1 .. -1]
+    ARGV.shift
+  end
+
+  compiler = Zu2Bf.new
+
+  bfcode = compiler.compile(ARGF.read)
+
+  case options || ""
+  when /r/ # run
+    bf = Brainfuck.VM
+    bf.load bfcode
+    bf.run
+  when /l/ # list
+    bf = Brainfuck.VM
+    bf.load bfcode
+    bf.list
+  else
+    print bfcode
+  end
+end
