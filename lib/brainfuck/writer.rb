@@ -40,17 +40,21 @@ module Brainfuck
     I_TMP_ZNZ  = 6
     I_TMP_EQ   = 7
     I_TMP_ADD  = I_TMP_SUB = 8
-    I_FLAG     = 9
-    I_FLAG_AND = I_FLAG_OR = I_FLAG_NOT  = 10
-    I_FLAG_BUP = 11
 
-    I_TMP_YN   = 12 # +3
+    I_TMP_MUL  = 9
+    I_TMP_MUL1 = 10 ; I_TMP_MUL2 = 11
+    
+    I_FLAG     = 12
+    I_FLAG_AND = I_FLAG_OR = I_FLAG_NOT  = 13
+    I_FLAG_BUP = 14
 
-    K_         = 15 # +2
-    K100       = 17 ; K10 = 18 ; K1 = 19
+    I_TMP_YN   = 15 # +3
+
+    K_         = 18 # +2
+    K100       = 20 ; K10 = 21 ; K1 = 22
 
 #   TMP        = 19
-    VAR_BASE   = 20
+    VAR_BASE   = 23
 
     private
     # st[ix] の値を得る
@@ -74,8 +78,8 @@ module Brainfuck
     public
     def bf_fwd  ; ">" ; end  # ix++
     def bf_back ; "<" ; end  # ix--
-    def bf_incr ; _set(_curr + 1) ; "+" ; end  # st[ix]++  - @_st[@_ix]を操作したいのでaug()を呼ぶ
-    def bf_decr ; _set(_curr - 1) ; "-" ; end  # st[ix]--  - @_st[@_ix]を操作したいのでaug()を呼ぶ
+    def bf_incr ; _set(_curr + 1) ; "+" ; end  # st[ix]++  - @_st[@_ix]も++
+    def bf_decr ; _set(_curr - 1) ; "-" ; end  # st[ix]--  - @_st[@_ix]も--
     private  # while_wend は loop{...} または loop_at(k){...} を使う
     def bf_while ; "[" ; end # while (st[ix]) {
     def bf_wend  ; "]" ; end # }
@@ -211,10 +215,16 @@ module Brainfuck
 
     # st[ix] *= val
     def mul_uint8(val)
-      clr_at(result)
-      [
-       
-      ]
+      save_ix {
+        copy_byte(I_TMP_MUL1,@_ix) +
+        clr_at(I_TMP_MUL) + # result
+        set_uint8_at(I_TMP_MUL2,val) +
+        repeat(I_TMP_MUL2) {
+          move_to(I_TMP_MUL) +
+          add_byte(I_TMP_MUL1)
+        }
+      } +
+      copy_byte(@_ix, I_TMP_MUL)
     end
     # st[ix] /= val, I_MOD = mod
     def div_uint8(val)
