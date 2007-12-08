@@ -35,7 +35,7 @@ module Brainfuck
     I_NODE     = 0
     I_NODE_TMP = 1
     I_TMP_SPACE = 2
-    I_TMP_PUT   = 3 # +2 ; Ê¸»úÎó¤òÉ½¼¨¤¹¤ë¤À¤±¤Î¥×¥í¥°¥é¥à¤ËÍ­Íø¤Ê¤è¤¦¤Ë
+    I_TMP_PUT   = 3 # +2 ; æ–‡å­—åˆ—ã‚’è¡¨ç¤ºã™ã‚‹ã ã‘ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã«æœ‰åˆ©ãªã‚ˆã†ã«
     I_TMP_COPY = 5
     I_TMP_ZNZ  = 6
     I_TMP_EQ   = 7
@@ -53,7 +53,7 @@ module Brainfuck
     VAR_BASE   = 20
 
     private
-    # st[ix] ¤ÎÃÍ¤òÆÀ¤ë
+    # st[ix] ã®å€¤ã‚’å¾—ã‚‹
     def _curr
       @_st[@_ix] ||= 0
     end
@@ -70,21 +70,21 @@ module Brainfuck
       VAR_BASE + (ch - 0x61)*2
     end
 
-    # ´ðËÜ£¸Ì¿Îá
+    # åŸºæœ¬ï¼˜å‘½ä»¤
     public
     def bf_fwd  ; ">" ; end  # ix++
     def bf_back ; "<" ; end  # ix--
-    def bf_incr ; _set(_curr + 1) ; "+" ; end  # st[ix]++  - @_st[@_ix]¤òÁàºî¤·¤¿¤¤¤Î¤Çaug()¤ò¸Æ¤Ö
-    def bf_decr ; _set(_curr - 1) ; "-" ; end  # st[ix]--  - @_st[@_ix]¤òÁàºî¤·¤¿¤¤¤Î¤Çaug()¤ò¸Æ¤Ö
-    private  # while_wend ¤Ï loop{...} ¤Þ¤¿¤Ï loop_at(k){...} ¤ò»È¤¦
+    def bf_incr ; _set(_curr + 1) ; "+" ; end  # st[ix]++  - @_st[@_ix]ã‚’æ“ä½œã—ãŸã„ã®ã§aug()ã‚’å‘¼ã¶
+    def bf_decr ; _set(_curr - 1) ; "-" ; end  # st[ix]--  - @_st[@_ix]ã‚’æ“ä½œã—ãŸã„ã®ã§aug()ã‚’å‘¼ã¶
+    private  # while_wend ã¯ loop{...} ã¾ãŸã¯ loop_at(k){...} ã‚’ä½¿ã†
     def bf_while ; "[" ; end # while (st[ix]) {
     def bf_wend  ; "]" ; end # }
     public
     def bf_write ; "." ; end # putchar(st[ix])
     def bf_read  ; "," ; end # st[ix] = getchar()
 
-    # ¤Á¤ç¤Ã¤È³ÈÄ¥Ì¿Îá
-    # ÁêÂÐ°ÜÆ°: ix += d
+    # ã¡ã‚‡ã£ã¨æ‹¡å¼µå‘½ä»¤
+    # ç›¸å¯¾ç§»å‹•: ix += d
     def move(d)
       # ix += d
       @_ix += d
@@ -96,17 +96,17 @@ module Brainfuck
         ""
       end
     end
-    # ÀäÂÐ°ÜÆ°: ix = pos
+    # çµ¶å¯¾ç§»å‹•: ix = pos
     def move_to(pos)
       return "" if pos == @_ix
       move(pos - @_ix)
     end
 
-    # ¥ì¥¸¥¹¥¿ÃÍ¤òÁý¸º
+    # ãƒ¬ã‚¸ã‚¹ã‚¿å€¤ã‚’å¢—æ¸›
     private
     def pm(d)
       # st[ix] += d
-      # °ìÈÌ¤Ë¤Ï add_uint8(d) ¤Þ¤¿¤Ï sub_uint8(d) ¤òÍøÍÑ¤¹¤ë¤è¤¦¤Ë
+      # ä¸€èˆ¬ã«ã¯ add_uint8(d) ã¾ãŸã¯ sub_uint8(d) ã‚’åˆ©ç”¨ã™ã‚‹ã‚ˆã†ã«
       if d > 0
         "+"*d
       elsif d < 0
@@ -140,10 +140,10 @@ module Brainfuck
     end
 
     #
-    # ¥Ð¥¤¥È±é»» ¢« st[ ] ¤Î³Æ¥á¥â¥êÎÎ°è¤ò¤³¤³¤Ç¤Ï¡Ö¥Ð¥¤¥È¡×¤È¸Æ¤ó¤Ç¤¤¤ë
+    # ãƒã‚¤ãƒˆæ¼”ç®— â† st[ ] ã®å„ãƒ¡ãƒ¢ãƒªé ˜åŸŸã‚’ã“ã“ã§ã¯ã€Œãƒã‚¤ãƒˆã€ã¨å‘¼ã‚“ã§ã„ã‚‹
     #
-    # st[src_pos] ¤ÎÆâÍÆ¤ò st[dest_pos] ¤Ë¥³¥Ô¡¼¡£
-    # st[src_pos] ¤ÎÆâÍÆ¤ÏÊÝ»ý¤µ¤ì¤ë¡£
+    # st[src_pos] ã®å†…å®¹ã‚’ st[dest_pos] ã«ã‚³ãƒ”ãƒ¼ã€‚
+    # st[src_pos] ã®å†…å®¹ã¯ä¿æŒã•ã‚Œã‚‹ã€‚
     def copy_byte(dest_pos, src_pos)
       return "" if dest_pos == src_pos
 
@@ -172,7 +172,7 @@ module Brainfuck
     end
 
     #
-    # uint8 - Éä¹æ¤Ê¤·8¥Ó¥Ã¥ÈÀ°¿ô±é»»
+    # uint8 - ç¬¦å·ãªã—8ãƒ“ãƒƒãƒˆæ•´æ•°æ¼”ç®—
     #
     def set_uint8(val)
       # st[ix] = val
@@ -244,7 +244,7 @@ module Brainfuck
       }
     end
 
-    # ***_at(pos) - ¢¨ix¤Ïpos¤ËÎ±¤á¤ë
+    # ***_at(pos) - â€»ixã¯posã«ç•™ã‚ã‚‹
     def incr_at(pos) ; move_to(pos) + bf_incr ; end
     def decr_at(pos) ; move_to(pos) + bf_decr ; end
     def read_at(pos) ; move_to(pos) + bf_read ; end
@@ -255,11 +255,11 @@ module Brainfuck
     def set_flag_at(pos) ; set_uint8_at(pos,1) ; end
     def reset_flag_at(pos) ; clr_at(pos) ; end
 
-    # ¥Ö¥í¥Ã¥¯
+    # ãƒ–ãƒ­ãƒƒã‚¯
     def if_nonzero_at(pos, &b)
-      # st[pos]¤¬ 0 ¤Ç¤Ê¤¤¾ì¹ç¤Î¤ß¥Ö¥í¥Ã¥¯¤ÎÆâÍÆ¤ò¼Â¹Ô¡£
-      # st[pos]¤ÎÃÍ¤ÏÊÝ»ý¤µ¤ì¤ë¡£
-      # boolÃÍ¤È¤ï¤«¤Ã¤Æ¤¤¤ë¾ì¹ç¤Ï¼¡¤Îrepeat¤ò»È¤¦¤È¤è¤¤¡£
+      # st[pos]ãŒ 0 ã§ãªã„å ´åˆã®ã¿ãƒ–ãƒ­ãƒƒã‚¯ã®å†…å®¹ã‚’å®Ÿè¡Œã€‚
+      # st[pos]ã®å€¤ã¯ä¿æŒã•ã‚Œã‚‹ã€‚
+      # boolå€¤ã¨ã‚ã‹ã£ã¦ã„ã‚‹å ´åˆã¯æ¬¡ã®repeatã‚’ä½¿ã†ã¨ã‚ˆã„ã€‚
 
 #      loop_at(pos) { b.call + clr_at(pos) }
       save_ix {
@@ -267,37 +267,37 @@ module Brainfuck
       }
     end
     def repeat(count_pos, &b)
-      # st[count_pos]¤Ë»ØÄê¤µ¤ì¤¿²ó¿ô¤À¤±¥Ö¥í¥Ã¥¯¤ÎÆâÍÆ¤ò¼Â¹Ô
+      # st[count_pos]ã«æŒ‡å®šã•ã‚ŒãŸå›žæ•°ã ã‘ãƒ–ãƒ­ãƒƒã‚¯ã®å†…å®¹ã‚’å®Ÿè¡Œ
       loop_at(count_pos) { b.call + decr_at(count_pos) }
     end
 
-    # test·Ï¡£¤³¤³¤Ç¤Ïtest¤Ç»Ï¤Þ¤ëÌ¾Á°¤òÉÕ¤±¤Ê¤¤
+    # testç³»ã€‚ã“ã“ã§ã¯testã§å§‹ã¾ã‚‹åå‰ã‚’ä»˜ã‘ãªã„
     def check_if_zero
-      # st[ix] ¤ÎÆâÍÆ¤¬ 0 ¤«¤É¤¦¤«¤ò I_FLAG ¤Ë¥»¥Ã¥È¤¹¤ë
+      # st[ix] ã®å†…å®¹ãŒ 0 ã‹ã©ã†ã‹ã‚’ I_FLAG ã«ã‚»ãƒƒãƒˆã™ã‚‹
       copy_byte(I_TMP_ZNZ, @_ix) +
         set_flag_at(I_FLAG) +
         do_once_if(I_TMP_ZNZ) { decr_at(I_FLAG) } +
 #       if_nonzero_at(I_TMP_ZNZ) { decr_at(I_FLAG) } +
         move_to(I_FLAG)
-      # ix = I_FLAG¤ÇÌá¤ë
+      # ix = I_FLAGã§æˆ»ã‚‹
     end
     def check_if_nonzero
-      # st[ix] ¤ÎÆâÍÆ¤¬ 0 ¤Ç¤Ê¤¤¤«¤É¤¦¤«¤ò I_FLAG ¤Ë¥»¥Ã¥È¤¹¤ë
+      # st[ix] ã®å†…å®¹ãŒ 0 ã§ãªã„ã‹ã©ã†ã‹ã‚’ I_FLAG ã«ã‚»ãƒƒãƒˆã™ã‚‹
       copy_byte(I_TMP_ZNZ, @_ix) +
         reset_flag_at(I_FLAG) +
         do_once_if(I_TMP_ZNZ) { incr_at(I_FLAG) } +
 #       if_nonzero_at(I_TMP_ZNZ) { incr_at(I_FLAG) } +
         move_to(I_FLAG)
-      # ix = I_FLAG¤ÇÌá¤ë
+      # ix = I_FLAGã§æˆ»ã‚‹
     end
     def check_if_n(n)
-      # st[ix] ¤ÎÆâÍÆ¤¬ n ¤ËÅù¤·¤¤¤«¤É¤¦¤«¤ò I_FLAG ¤Ë¥»¥Ã¥È¤¹¤ë
+      # st[ix] ã®å†…å®¹ãŒ n ã«ç­‰ã—ã„ã‹ã©ã†ã‹ã‚’ I_FLAG ã«ã‚»ãƒƒãƒˆã™ã‚‹
       sub_uint8(n) + check_if_zero + add_uint8(n)
     end
 
     # i/o
     def write_char(c)
-      # £±Ê¸»úÉ½¼¨¤¹¤ë¡£°ú¿ôc¤Ï¥³¡¼¥É¡£
+      # ï¼‘æ–‡å­—è¡¨ç¤ºã™ã‚‹ã€‚å¼•æ•°cã¯ã‚³ãƒ¼ãƒ‰ã€‚
       save_ix {
         set_uint8_at(I_TMP_PUT,c) + bf_write
       }
@@ -355,9 +355,9 @@ module Brainfuck
             }
           }
         } +
-        # ¤³¤³¤Þ¤Ç¤Ç¡¢st[K1],st[K10],st[K100]¤Ë¤Ï
-        # k¤Î1¤Î°Ì¡¢10¤Î°Ì¡¢100¤Î°Ì¤ÎÃÍ¤ò10¤«¤é°ú¤¤¤¿¿ô¤¬¤½¤ì¤¾¤ìÆþ¤ë
-        # eg. k=123¤Ê¤é st[K1]=7, st[K10]=8, st[K100]=9
+        # ã“ã“ã¾ã§ã§ã€st[K1],st[K10],st[K100]ã«ã¯
+        # kã®1ã®ä½ã€10ã®ä½ã€100ã®ä½ã®å€¤ã‚’10ã‹ã‚‰å¼•ã„ãŸæ•°ãŒãã‚Œãžã‚Œå…¥ã‚‹
+        # eg. k=123ãªã‚‰ st[K1]=7, st[K10]=8, st[K100]=9
         reset_flag_at(I_FLAG_BUP) +
 
         # print (at most 3) digit(s)
@@ -382,16 +382,16 @@ module Brainfuck
     end
 
     def if_zero_at(pos,&b)
-      # st[pos]=0¤Ê¤é¥Ö¥í¥Ã¥¯¤ÎÆâÍÆ¼Â¹Ô
+      # st[pos]=0ãªã‚‰ãƒ–ãƒ­ãƒƒã‚¯ã®å†…å®¹å®Ÿè¡Œ
       save_ix {
         move_to(pos) + check_if_zero + do_once_if(I_FLAG,&b) #if_nonzero_at(I_FLAG,&b)
       }
     end
 
     def yn_inkey
-      # y ¤« n ¤¬ÆþÎÏ¤µ¤ì¤ë¤Þ¤ÇÆþÎÏ¥ë¡¼¥×¡£
-      # I_TMP_YN ¤Ë·ë²Ì¤¬Æþ¤ë¡£¡Êy¤Ê¤é1,n¤Ê¤é0¡Ë
-      # ¤³¤Î·ë²Ì¤Ï I_FLAG ¤Ë¤â¥³¥Ô¡¼¤µ¤ì¤ë¡£
+      # y ã‹ n ãŒå…¥åŠ›ã•ã‚Œã‚‹ã¾ã§å…¥åŠ›ãƒ«ãƒ¼ãƒ—ã€‚
+      # I_TMP_YN ã«çµæžœãŒå…¥ã‚‹ã€‚ï¼ˆyãªã‚‰1,nãªã‚‰0ï¼‰
+      # ã“ã®çµæžœã¯ I_FLAG ã«ã‚‚ã‚³ãƒ”ãƒ¼ã•ã‚Œã‚‹ã€‚
       y_or_n    = I_TMP_YN   # 1:y 0:n  ==> copied to I_FLAG
       loop_flag = I_TMP_YN+1 # 1:[^yn] 0:[yn]
       inkey     = I_TMP_YN+2 # inkey
@@ -409,13 +409,13 @@ module Brainfuck
     end
 
     def say(s, next_node=0)
-      # Ê¸»úÎó s ¤òÉ½¼¨¤·²þ¹Ô¤¹¤ë¡£
+      # æ–‡å­—åˆ— s ã‚’è¡¨ç¤ºã—æ”¹è¡Œã™ã‚‹ã€‚
       write_string(s + "\n") + set_uint8_at(I_NODE, next_node)
     end
 
     def ask(s, n_node, y_node)
-      # Ê¸»úÎó¡Ê¼ÁÌäÊ¸¡Ës ¤òÉ½¼¨¤·¡¢y/n ¤ÎÆþÎÏ¤òÂ¥¤·¡¢I_NODE¤òÅ¬ÀÚ¤Ê¥Î¡¼¥ÉÈÖ¹æ¤Ë¥»¥Ã¥È¤¹¤ë
-      # n_node ¤¬Àè¤Ê¤Î¤ÏZu¤Î»ÅÍÍ¤Ë¹ç¤ï¤»¤Æ¤¤¤ë¤¿¤á
+      # æ–‡å­—åˆ—ï¼ˆè³ªå•æ–‡ï¼‰s ã‚’è¡¨ç¤ºã—ã€y/n ã®å…¥åŠ›ã‚’ä¿ƒã—ã€I_NODEã‚’é©åˆ‡ãªãƒŽãƒ¼ãƒ‰ç•ªå·ã«ã‚»ãƒƒãƒˆã™ã‚‹
+      # n_node ãŒå…ˆãªã®ã¯Zuã®ä»•æ§˜ã«åˆã‚ã›ã¦ã„ã‚‹ãŸã‚
       save_ix {
         write_string(s + " [y/n]\n> ") +
         yn_inkey +

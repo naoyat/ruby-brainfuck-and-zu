@@ -119,7 +119,7 @@ module Brainfuck
             insts.push [ :set, 0 ] # lambda{ set 0 }
             i += 3
           else
-            subs, len = compile(code[i+1 .. -1]) # [ ¤Î¼¡¤ÎÊ¸»ú¤«¤éÀè¡Ê ] ¤¬¸½¤ì¤ë¤Ş¤Ç¡Ë¤ò¥³¥ó¥Ñ¥¤¥ë
+            subs, len = compile(code[i+1 .. -1]) # [ ã®æ¬¡ã®æ–‡å­—ã‹ã‚‰å…ˆï¼ˆ ] ãŒç¾ã‚Œã‚‹ã¾ã§ï¼‰ã‚’ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
             insts.push [ :while, subs ] if subs.size > 0 # subs
             i += 1 + len + 1
           end

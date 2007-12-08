@@ -12,7 +12,7 @@ if ARGV.size >= 1
 
   bfcode = bf.load(ARGF.read)
 
-  if options =~ /l/  # bfi -l <source> �Ȥ���ȼ¹Ԥ����˥ꥹ�Ȥ����פ���
+  if options =~ /l/  # bfi -l <source> とすると実行せずにリストをダンプする
     bf.list
   else
     bf.run
