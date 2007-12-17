@@ -22,15 +22,19 @@
 
   zu2bf : ２次元プログラミング言語「ず」のコンパイラ
 
-    「ず」については作者のyharaさんの
-      http://mono.kmc.gr.jp/~yhara/w/?ZuLanguage
-    を参照のこと。textgraphライブラリ（zu-0.1.0.tar.gzに含まれる）が必要。
+    yharaさんの textgraph ライブラリが必要。
+    % gem install textgraph
 
-    生成したコードは、８ビットでwrap aroundしない処理系では動きません。
+    プログラミング言語「ず」については作者のyharaさんの
+      http://mono.kmc.gr.jp/~yhara/w/?ZuLanguage
+    を参照のこと。
+
+    生成したコードは、今のところ８ビットでwrap aroundしない処理系では動きません。
 
     % ./zu2bf foo.zu > foo.bf
 
       「ず」で書かれたプログラム foo.zu をBrainf*ckオブジェクトコードにコンパイル
+　　　デフォルトで80字／行に折り畳み。-n を付ければ折り畳まない (0.1.3)
 
     % ./zu2bf -r foo.zu 
 
@@ -42,9 +46,10 @@
 
 ! 開発履歴
 
+  * ver 0.1.3
+  * ver 0.1.2
   * ver 0.1.1 : 2007-12-06夜
-  * ver 0.1.0 : 2007-12-06朝
-  ** 初公開
+  * ver 0.1.0 : 2007-12-06朝 初公開
 
 ! 作者
 

@@ -8,11 +8,14 @@ require 'brainfuck'
 
 class Zu2Bf
   def initialize
+    @debug_mode = false
   end
+  attr_accessor :debug_mode
 
   def compile(src)
     tg = TextGraph.parse(src)
     wr = Brainfuck.writer
+    wr.debug_mode = @debug_mode
 
     table = Array.new
 
@@ -22,8 +25,28 @@ class Zu2Bf
       nexts.size.times {|t| inst += ", #{1+nexts[t][1]}"}
       table[1+i] = inst
     }
-    wr.node_switch(table).optimize
+    optimize wr.node_switch(table)
   end
+
+  def optimize(code)
+    return "" unless code and code.length > 0
+    begin
+      last_length = code.length
+      code.gsub!(/<>/,"")
+      code.gsub!(/></,"")
+    end while code.length < last_length
+    code.sub!(/[-+<>,]*\Z/, "")
+  end
+end
+
+def fold_string(orig,line_length)
+  lines = ((orig.length + (line_length-1)) / line_length).to_i
+  s = ""
+  (lines - 1).times{|l|
+    s += orig[line_length*l .. line_length*l + (line_length-1)] + "\n"
+  }
+  s += orig[line_length*(lines-1) .. -1] + "\n" if line_length*(lines-1) < orig.length
+  s
 end
 
 if ARGV.size==0
@@ -33,12 +56,14 @@ else
     options = ARGV[0][1 .. -1]
     ARGV.shift
   end
+  options ||= ""
 
   compiler = Zu2Bf.new
+  compiler.debug_mode = true if options =~ /d/
 
   bfcode = compiler.compile(ARGF.read)
 
-  case options || ""
+  case options
   when /r/ # run
     bf = Brainfuck.VM
     bf.load bfcode
@@ -47,7 +72,11 @@ else
     bf = Brainfuck.VM
     bf.load bfcode
     bf.list
-  else
+  when /d/ # debug
+    # nothign
+  when /n/ # raw
     print bfcode
+  else
+    print fold_string(bfcode,80)
   end
 end
